@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nota — free, open-source DAW</title>
+    <meta name="description" content="Nota is a free, open-source DAW for macOS, Windows and Linux with built-in stem separation, audio-to-MIDI, project version history and 46 instruments and effects." />
+    <meta property="og:title" content="Nota — free, open-source DAW" />
+    <meta property="og:description" content="Arrange, record, mix and master. Stem separation and audio-to-MIDI run on your own computer." />
+    <meta name="theme-color" content="#0C0B09" />
+    <link rel="icon" type="image/svg+xml" href="/nota.svg" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try { var t = localStorage.getItem("nota-site-theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

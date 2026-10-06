@@ -1,0 +1,33 @@
+/* Ember theme tokens: Graphite (dark) and Paper (light). */
+:root, html[data-theme="dark"] { --bg:#0C0B09; --surface:#141310; --well:#100F0D; --raised:#1C1A16; --line:#2C2923; --hair:#221F1A; --ink:#F2EDE1; --ink2:#C7C0B0; --ink3:#A39D8F; --ink4:#8D8779; --brass:#D8A03D; --brassHi:#E9BE6A; --brassInk:#E9BE6A; --brassSoft:#241F17; --brassEdge:#6B5326; --eyebrow:#C09040; --onBrass:#171613; --grid:#1A1814; --navBg:#0C0B09E6; color-scheme: dark; }
+html[data-theme="light"] { --bg:#EFEAE0; --surface:#F6F2EA; --well:#E6E0D4; --raised:#FBF9F4; --line:#D3CBBB; --hair:#DFD8CA; --ink:#1A1814; --ink2:#3A362D; --ink3:#55514A; --ink4:#6E6A5E; --brass:#D8A03D; --brassHi:#E9BE6A; --brassInk:#8A6418; --brassSoft:#F3E6C8; --brassEdge:#D9B672; --eyebrow:#8A6418; --onBrass:#171613; --grid:#E1DACD; --navBg:#EFEAE0E6; color-scheme: light; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:Geist, system-ui, sans-serif; -webkit-font-smoothing:antialiased; transition:background .2s; }
+a { color:var(--brassInk); text-decoration:none; }
+a:hover { color:var(--brassHi); }
+::selection { background:#D8A03D55; }
+section[id], header[id] { scroll-margin-top:60px; }
+
+/* Hover states (inline styles win over plain class rules, hence !important). */
+.h1:hover{color:var(--ink) !important}
+.h2:hover{color:var(--ink) !important}
+.h3:hover{color:var(--ink) !important}
+.h4:hover{color:var(--ink) !important}
+.h5:hover{background:var(--brassHi) !important;color:var(--onBrass) !important}
+.h6:hover{background:var(--brassHi) !important;color:var(--onBrass) !important}
+.h7:hover{color:var(--ink) !important;border-color:var(--ink4) !important}
+.h8:hover{color:var(--ink) !important}
+.h9:hover{background:var(--raised) !important}
+.h10:hover{border-color:var(--brass) !important;color:var(--ink) !important}
+.h11:hover{color:var(--ink) !important}
+.h12:hover{color:var(--ink) !important}
+.h13:hover{color:var(--ink) !important}
+.h14:hover{color:var(--ink) !important}
+.mwh1:hover{background:#252219 !important}
+.mwh2:hover{background:#252219 !important;border-color:#3A362D !important}
+
+/* Narrow screens: the section links collapse; logo, theme and Download stay. */
+@media (max-width: 760px) {
+  .nav-links { display: none !important; }
+  .nav-row { padding: 0 20px !important; gap: 14px !important; }
+}
