@@ -31,3 +31,22 @@ section[id], header[id] { scroll-margin-top:60px; }
   .nav-links { display: none !important; }
   .nav-row { padding: 0 20px !important; gap: 14px !important; }
 }
+
+/* Device gallery */
+.g-chip:hover, .g-arrow:hover { border-color: var(--ink4) !important; color: var(--ink) !important; }
+@media (max-width: 900px) {
+  .gallery { grid-template-columns: minmax(0, 1fr) !important; }
+}
+.ph1:hover{background:#1C1A16 !important}
+.ph2:hover{background:#1C1A16 !important}
+.ph3:hover{background:#1C1A16 !important}
+.st1:hover{background:#1F1D19 !important}
+.st2:hover{border-color:#3A362E !important}
+.st3:hover{background:#2A2720 !important}
+.st4:hover{background:#26231E !important}
+.st5:hover{background:#26231E !important}
+.st6:hover{background:#26231E !important}
+.st7:hover{background:#1F1D19 !important;color:#E9E4D8 !important}
+.st8:hover{color:#E9E4D8 !important}
+.st9:hover{background:#26231E !important}
+.st10:hover{background:#26231E !important}

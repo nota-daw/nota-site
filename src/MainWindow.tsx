@@ -2,6 +2,9 @@
 // fixed 1680 px width; the Hero scales it to fit. Colors are the app's
 // Ember Graphite palette, independent of the site theme.
 import { Fragment, useEffect, useState } from "react";
+import { Transport } from "./hero/Transport";
+
+const PANEL = import.meta.env.BASE_URL + "hero/devices-panel.webp";
 
 const BARS = 17, BAR_PX = 70;
 const ICON = {
@@ -30,7 +33,7 @@ type Track = {
 };
 const C = { inst: "#5AA0B8", vox: "#9AA64A", drums: "#58B368", perc: "#4E9E7A", aux: "#C77F55" };
 const TRACKS: Track[] = [
-  { name: "Nota Aurora", kind: "MIDI", color: C.inst, input: "In · None", gain: "0.0", fader: 62, meter: 58, wave: "midi", clips: [[10, 8]] },
+  { name: "Nota Volt", kind: "MIDI", color: C.perc, input: "In · None", gain: "0.0", fader: 62, meter: 58, wave: "midi", clips: [[10, 8]] },
   { group: "VOCAL", color: C.vox },
   { name: "Audio 3", kind: "AUDIO", color: C.vox, input: "Ext In", gain: "0.0", fader: 62, meter: 64, inGroup: 1, clips: [[2, 8], [10, 1]] },
   { name: "Audio 4", kind: "AUDIO", color: C.vox, input: "Ext In", gain: "0.0", fader: 62, meter: 40, inGroup: 1, decay: 1, clips: [[10, 2], [14, 2]] },
@@ -73,34 +76,7 @@ function hitsPath(w: number) {
   });
   return d;
 }
-function combPath(tau: number, g: number, n: number) {
-  const pts: number[][] = [];
-  for (let i = 0; i <= n; i++) {
-    const x = i / n * 300, f = 20 * Math.pow(10, i / n * 3);
-    const w = 2 * Math.PI * f * tau / 1000;
-    const mag = Math.sqrt(1 + g * g + 2 * g * Math.cos(w)) / (1 + g);
-    const db = Math.max(-24, 20 * Math.log10(Math.max(mag, 1e-4)) + 4);
-    pts.push([x, (6 - db) / 30 * 120]);
-  }
-  return pts;
-}
-function tri(phase: number) {
-  let d = "";
-  for (let i = 0; i <= 120; i++) {
-    const x = i / 120 * 300, p = ((i / 120) * 2 + phase) % 1;
-    const y = 6 + (p < 0.5 ? p * 2 : 2 - p * 2) * 28;
-    d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1) + " ";
-  }
-  return d;
-}
-const toD = (pts: number[][]) => pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
-const knob = (label: string, val: string, pct: number, arc?: string) =>
-  ({ label, val, d: (pct * 270).toFixed(0) + "deg", rot: (-135 + pct * 270).toFixed(0) + "deg", arc: arc || "#D8A03D" });
-const WAVES = ["M1 8 L8 2 V8 L15 2", "M1 8 V2 H8 V8 H15", "M1 8 L5 2 L11 8 L15 2", "M1 5 C3 0 6 0 8 5 S13 10 15 5"];
-
 // Static parts, computed once.
-const combL = toD(combPath(4.04, 0.75, 700)), combR = toD(combPath(1.56, 0.75, 400));
-const lfoL = tri(0), lfoR = tri(0.25);
 const rail = RAIL.map(([label, icon], i) => ({ label, icon, ink: i === 0 ? "#D8A03D" : "#8D8779", bar: i === 0 ? "#D8A03D" : "transparent", rule: i === 3 ? "#2C2923" : "transparent" }));
 const rows: Record<string, any>[] = [
   { isGroup: true, isItem: false, label: "BUILT-IN", count: 16 },
@@ -137,29 +113,11 @@ const ticks = Array.from({ length: BARS }, (_, i) => ({
   left: (i / BARS * 100) + "%", label: i + 1,
   line: i % 4 === 0 ? "#3A362E" : "#221F1A", ink: i % 4 === 0 ? "#A39D8F" : "#55514A",
 }));
-const voltTabs = ["Osc", "Filter", "Env", "LFO", "Mod", "Macro"].map((n, i) => ({ name: n, ink: i ? "#6E6A5E" : "#E9BE6A", bar: i ? "transparent" : "#D8A03D" }));
-const oscRows = [
-  { name: "OSC 1", seg: WAVES.map((p, i) => ({ path: p as string | null, text: null as string | null, bg: i === 3 ? "#D8A03D" : "transparent", ink: i === 3 ? "#171613" : "#8D8779" })),
-    knobs: [knob("OCT", "0", 0.5), knob("SEMI", "0", 0.5), knob("FINE", "0 c", 0.5), knob("PHASE", "free", 0), knob("LEVEL", "85%", 0.85)] },
-  { name: "OSC 2", seg: WAVES.map((p, i) => ({ path: p as string | null, text: null as string | null, bg: i === 2 ? "#D8A03D" : "transparent", ink: i === 2 ? "#171613" : "#8D8779" })),
-    knobs: [knob("OCT", "+1", 0.62), knob("SEMI", "0", 0.5), knob("FINE", "+4 c", 0.55), knob("PHASE", "free", 0), knob("LEVEL", "45%", 0.45)] },
-  { name: "NOISE", seg: ["dark", "pink", "white"].map((n, i) => ({ path: null as string | null, text: n as string | null, bg: i === 1 ? "#D8A03D" : "transparent", ink: i === 1 ? "#171613" : "#8D8779" })),
-    knobs: [knob("COLOR", "60%", 0.6), knob("LEVEL", "0%", 0)] },
-];
-const voltSliders = [{ label: "CUTOFF", val: "6.9 kHz", pct: "80%" }, { label: "RESO", val: "0.08", pct: "8%" }, { label: "GLIDE", val: "off", pct: "0%" }];
-const voltOut = [knob("GAIN", "74%", 0.74), knob("PAN", "C", 0.5)];
-const lfoSliders = [{ label: "RATE", val: "0.08 Hz", pct: "22%" }, { label: "STEREO", val: "90°", pct: "50%" }];
-const delaySliders = [
-  { label: "DELAY", val: "3.00 ms", from: "0", pct: "70%" }, { label: "DEPTH", val: "90%", from: "0", pct: "90%" },
-  { label: "FEEDBACK", val: "+26%", from: "50%", pct: "13%" }, { label: "MIX", val: "50%", from: "0", pct: "50%" },
-];
-const showDevices = true;
-
 export function MainWindow() {
   const [t, setT] = useState(1);
   const [playing, setPlaying] = useState(false);
   const [view, setView] = useState("Arrangement");
-  const [sel, setSel] = useState("Nota Aurora");
+  const [sel, setSel] = useState("Nota Volt");
 
   useEffect(() => {
     if (!playing) return;
@@ -169,14 +127,9 @@ export function MainWindow() {
 
   const bar = Math.floor(t), beat = Math.floor((t - bar) * 4) + 1, tick = Math.floor((((t - bar) * 4) % 1) * 100);
   const pos = bar + "." + beat + "." + String(tick).padStart(2, "0");
-  const playBg = playing ? "#D8A03D" : "#1C1A16", playInk = playing ? "#171613" : "#C7C0B0", playEdge = playing ? "#D8A03D" : "#2C2923";
   const onPlay = () => setPlaying(!playing);
   const onStop = () => { setPlaying(false); setT(1); };
-  const views = ["Arrangement", "Session", "Modular"].map((n) => ({
-    name: n, bg: view === n ? "#D8A03D" : "transparent", ink: view === n ? "#171613" : "#8D8779", onClick: () => setView(n),
-  }));
   const headFrac = ((t - 1) / BARS).toFixed(4);
-  const lfoHead = (((t - 1) / 17 * 100) % 100).toFixed(2) + "%";
 
   const lanes: (Record<string, any> & { clips: any[] })[] = TRACKS.map((tr) => {
     if (tr.group) return {
@@ -223,86 +176,7 @@ export function MainWindow() {
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '12px' }}>
-        <div style={{ flex: 'none', height: '48px', display: 'flex', alignItems: 'center', gap: '12px', padding: '0 12px 0 14px', background: '#141310', border: '1px solid #2C2923', borderRadius: '6px', overflow: 'hidden', boxSizing: 'border-box' }}>
-          <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '13px', fontWeight: '600', color: '#E9E4D8' }}>demo02</span>
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '0', padding: '3px', background: '#100F0D', border: '1px solid #221F1A', borderRadius: '5px', boxShadow: 'inset 0 1px 0 #00000080' }}>
-            {views.map((v, vI) => (
-              <Fragment key={vI}>
-                <div onClick={v.onClick} style={{ height: '24px', padding: '0 12px', borderRadius: '3px', background: v.bg, display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                  <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '600', color: v.ink }}>{v.name}</span>
-                </div>
-              </Fragment>
-            ))}
-          </div>
-          <div style={{ flex: 'none', width: '1px', height: '22px', background: '#221F1A' }} />
-          <div style={{ flex: 'none', height: '40px', display: 'flex', alignItems: 'center', gap: '4px', padding: '0 4px', background: '#0A0908', border: '1px solid #221F1A', borderRadius: '6px', boxShadow: 'inset 0 1px 0 #00000080', boxSizing: 'border-box' }}>
-            <div className="mwh1" onClick={onStop} title="Stop" style={{ width: '34px', height: '32px', borderRadius: '5px', background: '#1C1A16', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxSizing: 'border-box' }}>
-              <div style={{ flex: 'none', width: '9px', height: '9px', background: '#C7C0B0', borderRadius: '1px' }} />
-            </div>
-            <div onClick={onPlay} title="Play" style={{ width: '46px', height: '32px', borderRadius: '5px', background: playBg, border: `1px solid ${playEdge}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxSizing: 'border-box' }}>
-              <div style={{ flex: 'none', width: '0', height: '0', borderLeft: `10px solid ${playInk}`, borderTop: '6px solid transparent', borderBottom: '6px solid transparent', marginLeft: '2px' }} />
-            </div>
-            <div title="Record" style={{ width: '34px', height: '32px', borderRadius: '5px', background: '#1C1A16', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxSizing: 'border-box' }}>
-              <div style={{ flex: 'none', width: '10px', height: '10px', borderRadius: '50%', background: '#C25B44' }} />
-            </div>
-          </div>
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'baseline', gap: '6px', width: '64px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '13px', fontWeight: '500', color: '#E9E4D8', fontVariantNumeric: 'tabular-nums' }}>{pos}</span>
-          </div>
-          <div style={{ flex: 'none', height: '26px', display: 'flex', alignItems: 'center', gap: '8px', padding: '0 10px', borderRadius: '4px', background: '#241F17', border: '1px solid #6B5326', boxSizing: 'border-box' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '600', color: '#E9BE6A' }}>Loop</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#E9BE6A' }}>1.1 – 5.1</span>
-          </div>
-          <div style={{ flex: 'none', width: '1px', height: '20px', background: '#221F1A' }} />
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '13px', fontWeight: '500', color: '#C7C0B0' }}>118.00</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#55514A' }}>BPM</span>
-          </div>
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '13px', fontWeight: '500', color: '#C7C0B0' }}>4/4</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#55514A' }}>SIG</span>
-          </div>
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '13px', fontWeight: '500', color: '#C7C0B0' }}>1/4</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#55514A' }}>GRID</span>
-          </div>
-          <div style={{ flex: 'none', width: '1px', height: '20px', background: '#221F1A' }} />
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ flex: 'none', height: '26px', padding: '0 10px', borderRadius: '4px', background: '#1C1A16', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}>
-              <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '600', color: '#C7C0B0' }}>Click</span>
-            </div>
-            <div style={{ flex: 'none', height: '26px', padding: '0 10px', borderRadius: '4px', background: '#241F17', border: '1px solid #6B5326', display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}>
-              <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '600', color: '#E9BE6A' }}>Snap</span>
-            </div>
-            <div style={{ flex: 'none', height: '26px', padding: '0 10px', borderRadius: '4px', background: '#1C1A16', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}>
-              <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '600', color: '#C7C0B0' }}>Auto</span>
-            </div>
-          </div>
-          <div style={{ flex: '1', minWidth: '0' }} />
-          <div className="mwh2" style={{ flex: 'none', height: '26px', padding: '0 11px', borderRadius: '4px', background: '#1C1A16', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', gap: '7px', boxSizing: 'border-box', boxShadow: 'inset 0 1px 0 #FFFFFF08' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '13px', lineHeight: '1', color: '#C7C0B0' }}>+</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '11px', fontWeight: '500', color: '#C7C0B0' }}>Track</span>
-          </div>
-          <div style={{ flex: 'none', width: '1px', height: '20px', background: '#221F1A' }} />
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '7px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '9px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>MIDI</span>
-            <div style={{ flex: 'none', width: '6px', height: '6px', borderRadius: '50%', background: '#7FB069' }} />
-          </div>
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '7px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '9px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>CPU</span>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#8D8779', width: '30px', textAlign: 'right' }}>11 %</span>
-          </div>
-          <div style={{ flex: 'none', width: '1px', height: '20px', background: '#221F1A' }} />
-          <div style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontSize: '9px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>MASTER</span>
-            <div style={{ flex: 'none', width: '80px', height: '14px', display: 'flex', alignItems: 'center', position: 'relative' }}>
-              <div style={{ flex: 'none', width: '100%', height: '3px', borderRadius: '2px', background: '#100F0D' }} />
-              <div style={{ flex: 'none', position: 'absolute', left: '0', height: '3px', width: '72%', borderRadius: '2px', background: '#8D8779' }} />
-              <div style={{ flex: 'none', position: 'absolute', left: '72%', width: '6px', height: '7px', borderRadius: '1px', background: '#E9E4D8', transform: 'translateX(-3px)' }} />
-            </div>
-            <span style={{ flex: 'none', whiteSpace: 'nowrap', fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#C7C0B0', width: '44px', textAlign: 'right' }}>0.0 dB</span>
-          </div>
-        </div>
+        <Transport project="demo02" view={view} onView={setView} playing={playing} pos={pos} onPlay={onPlay} onStop={onStop} />
         <div style={{ height: '556px', flex: 'none', display: 'flex', gap: '12px' }}>
           <div style={{ width: '300px', flex: 'none', display: 'flex', background: '#141310', border: '1px solid #2C2923', borderRadius: '6px', overflow: 'hidden', boxSizing: 'border-box' }}>
             <div style={{ width: '40px', flex: 'none', display: 'flex', flexDirection: 'column', background: '#141310', borderRight: '1px solid #221F1A' }}>
@@ -535,312 +409,12 @@ export function MainWindow() {
             <div style={{ position: 'absolute', top: '56px', left: `calc(220px + (100% - 220px) * ${headFrac})`, width: '0', height: '0', borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '6px solid #D8A03D', transform: 'translateX(-4.5px)', pointerEvents: 'none' }} />
           </div>
         </div>
-        {showDevices ? (
-          <>
-            <div style={{ flex: 'none', display: 'flex', flexDirection: 'column', background: '#141310', border: '1px solid #2C2923', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{ height: '32px', flex: 'none', display: 'flex', alignItems: 'center', gap: '14px', padding: '0 10px 0 8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#171613', borderRadius: '5px', padding: '2px' }}>
-                  <div style={{ height: '22px', padding: '0 10px', borderRadius: '3px', background: '#D8A03D', display: 'flex', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', fontWeight: '600', color: '#171613' }}>Devices</span>
-                  </div>
-                  <div style={{ height: '22px', padding: '0 10px', display: 'flex', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', fontWeight: '600', color: '#8D8779' }}>Pattern</span>
-                  </div>
-                  <div style={{ height: '22px', padding: '0 10px', display: 'flex', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', fontWeight: '600', color: '#8D8779' }}>Clip</span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '0' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '2px', background: '#5AA0B8' }} />
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#E9E4D8' }}>Nota Aurora</span>
-                </div>
-                <div style={{ flex: '1' }} />
-                <div style={{ height: '22px', padding: '0 9px', borderRadius: '4px', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '500', color: '#A39D8F' }}>Freeze</span>
-                </div>
-                <div style={{ height: '22px', padding: '0 9px', borderRadius: '4px', border: '1px solid #2C2923', display: 'flex', alignItems: 'center', boxSizing: 'border-box' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '500', color: '#A39D8F' }}>Live Freeze</span>
-                </div>
-                <div style={{ width: '1px', height: '16px', background: '#221F1A' }} />
-                <svg width="12" height="12" viewBox={'0 0 24 24'} fill="none" stroke="#6E6A5E" strokeWidth="1.8" strokeLinecap="round">
-                  <path d="M14 4 h6 v6 M20 4 l-8 8 M18 14 v6 h-14 v-14 h6" />
-                </svg>
-                <svg width="11" height="11" viewBox={'0 0 24 24'} fill="none" stroke="#6E6A5E" strokeWidth="2" strokeLinecap="round">
-                  <path d="M5 5 L19 19 M19 5 L5 19" />
-                </svg>
-              </div>
-              <div style={{ height: '268px', flex: 'none', display: 'flex', gap: '8px', padding: '0 8px 8px 8px', boxSizing: 'border-box' }}>
-                <div style={{ width: '700px', height: '260px', flex: 'none', display: 'flex', flexDirection: 'column', background: '#0B0A09', border: '1px solid #2C2923', borderRadius: '8px', overflow: 'hidden', boxSizing: 'border-box' }}>
-                  <div style={{ height: '22px', flex: 'none', display: 'flex', alignItems: 'center', gap: '10px', padding: '0 6px 0 10px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#E9E4D8' }}>Nota Volt</span>
-                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', letterSpacing: '.14em', color: '#6E6A5E' }}>SUBTRACTIVE</span>
-                    <span style={{ flex: '1' }} />
-                    <div style={{ width: '150px', height: '16px', display: 'flex', alignItems: 'stretch', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '4px', boxSizing: 'border-box' }}>
-                      <div style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8D8779', borderRight: '1px solid #221F1A', fontSize: '10px' }}>‹</div>
-                      <div style={{ flex: '1', display: 'flex', alignItems: 'center', padding: '0 8px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: '500', color: '#E9E4D8' }}>Init</span>
-                      </div>
-                      <div style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8D8779', borderLeft: '1px solid #221F1A', fontSize: '10px' }}>›</div>
-                    </div>
-                    <div style={{ width: '18px', height: '10px', borderRadius: '5px', position: 'relative', background: '#D8A03D' }}>
-                      <div style={{ position: 'absolute', top: '1.5px', left: '9.5px', width: '7px', height: '7px', borderRadius: '50%', background: '#141310' }} />
-                    </div>
-                  </div>
-                  <div style={{ flex: '1', minHeight: '0', display: 'flex', gap: '5px', padding: '0 6px' }}>
-                    <div style={{ width: '40px', flex: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', padding: '8px 0', background: '#171613', borderRadius: '6px' }}>
-                      <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#55514A' }}>WHEELS</span>
-                      <div style={{ flex: '1', display: 'flex', gap: '5px' }}>
-                        <div style={{ width: '12px', borderRadius: '6px', background: '#0E0D0B', border: '1px solid #2C2923', position: 'relative', boxSizing: 'border-box' }}>
-                          <div style={{ position: 'absolute', left: '1px', right: '1px', top: '47%', height: '5px', borderRadius: '2px', background: '#8D8779' }} />
-                        </div>
-                        <div style={{ width: '12px', borderRadius: '6px', background: '#0E0D0B', border: '1px solid #2C2923', position: 'relative', boxSizing: 'border-box' }}>
-                          <div style={{ position: 'absolute', left: '1px', right: '1px', bottom: '2px', height: '5px', borderRadius: '2px', background: '#8D8779' }} />
-                        </div>
-                      </div>
-                      <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#6E6A5E' }}>±2st</span>
-                    </div>
-                    <div style={{ flex: '1', minWidth: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#171613', borderRadius: '6px' }}>
-                      <div style={{ height: '26px', flex: 'none', display: 'flex', alignItems: 'center', gap: '14px', padding: '0 12px', borderBottom: '1px solid #221F1A' }}>
-                        {voltTabs.map((t, tI) => (
-                          <Fragment key={tI}>
-                            <div style={{ height: '26px', display: 'flex', alignItems: 'center', boxSizing: 'border-box', borderBottom: `2px solid ${t.bar}` }}>
-                              <span style={{ fontSize: '10px', fontWeight: '600', color: t.ink }}>{t.name}</span>
-                            </div>
-                          </Fragment>
-                        ))}
-                      </div>
-                      {oscRows.map((o, oI) => (
-                        <Fragment key={oI}>
-                          <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '8px', padding: '0 10px', borderBottom: '1px solid #221F1A' }}>
-                            <span style={{ width: '36px', flex: 'none', fontSize: '9px', fontWeight: '700', letterSpacing: '.06em', color: '#C7C0B0' }}>{o.name}</span>
-                            <div style={{ width: '92px', flex: 'none', height: '20px', display: 'flex', padding: '2px', gap: '2px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '4px', boxSizing: 'border-box' }}>
-                              {o.seg.map((s, sI) => (
-                                <Fragment key={sI}>
-                                  <div style={{ flex: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '2px', background: s.bg }}>
-                                    {s.path ? (
-                                      <>
-                                        <svg width="16" height="10" viewBox={'0 0 16 10'} fill="none" stroke={s.ink} strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round">
-                                          <path d={s.path} />
-                                        </svg>
-                                      </>
-                                    ) : null}
-                                    {s.text ? (
-                                      <>
-                                        <span style={{ fontSize: '9px', fontWeight: '600', color: s.ink }}>{s.text}</span>
-                                      </>
-                                    ) : null}
-                                  </div>
-                                </Fragment>
-                              ))}
-                            </div>
-                            <div style={{ flex: '1', minWidth: '0', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '4px' }}>
-                              {o.knobs.map((k, kI) => (
-                                <Fragment key={kI}>
-                                  <div style={{ width: '40px', flex: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: `conic-gradient(from 225deg, ${k.arc} 0deg ${k.d}, #2A2722 ${k.d} 270deg, transparent 270deg)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#1C1A16', position: 'relative', transform: `rotate(${k.rot})` }}>
-                                        <div style={{ position: 'absolute', left: '9px', top: '2px', width: '2px', height: '7px', borderRadius: '1px', background: '#E9E4D8' }} />
-                                      </div>
-                                    </div>
-                                    <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.08em', color: '#6E6A5E' }}>{k.label}</span>
-                                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', lineHeight: '1', color: '#C7C0B0' }}>{k.val}</span>
-                                  </div>
-                                </Fragment>
-                              ))}
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                              <span style={{ fontSize: '7px', fontWeight: '700', letterSpacing: '.1em', color: '#55514A' }}>ROUTE</span>
-                              <div style={{ display: 'flex', padding: '1px', gap: '1px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '3px' }}>
-                                <span style={{ padding: '2px 5px', borderRadius: '2px', background: '#D8A03D', fontSize: '9px', fontWeight: '600', color: '#171613' }}>F1</span>
-                                <span style={{ padding: '2px 5px', fontSize: '9px', fontWeight: '600', color: '#6E6A5E' }}>F2</span>
-                              </div>
-                            </div>
-                          </div>
-                        </Fragment>
-                      ))}
-                    </div>
-                    <div style={{ width: '156px', flex: 'none', display: 'flex', flexDirection: 'column', gap: '6px', padding: '8px 10px', overflow: 'hidden', background: '#171613', borderRadius: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>VOICES</span>
-                        <div style={{ display: 'flex', padding: '1px', gap: '1px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '3px' }}>
-                          <span style={{ padding: '2px 6px', borderRadius: '2px', background: '#D8A03D', fontSize: '9px', fontWeight: '600', color: '#171613' }}>Poly</span>
-                          <span style={{ padding: '2px 6px', fontSize: '9px', fontWeight: '600', color: '#6E6A5E' }}>Mono</span>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>BEND</span>
-                        <div style={{ display: 'flex', padding: '1px', gap: '1px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '3px' }}>
-                          <span style={{ padding: '2px 5px', borderRadius: '2px', background: '#D8A03D', fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#171613' }}>±2</span>
-                          <span style={{ padding: '2px 5px', fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#6E6A5E' }}>±5</span>
-                          <span style={{ padding: '2px 5px', fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#6E6A5E' }}>±12</span>
-                        </div>
-                      </div>
-                      {voltSliders.map((s, sI) => (
-                        <Fragment key={sI}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>{s.label}</span>
-                              <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#C7C0B0' }}>{s.val}</span>
-                            </div>
-                            <div style={{ height: '4px', borderRadius: '2px', background: '#0E0D0B', position: 'relative' }}>
-                              <div style={{ position: 'absolute', left: '0', top: '0', bottom: '0', width: s.pct, borderRadius: '2px', background: '#D8A03D' }} />
-                            </div>
-                          </div>
-                        </Fragment>
-                      ))}
-                      <div style={{ flex: '1' }} />
-                      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                        {voltOut.map((k, kI) => (
-                          <Fragment key={kI}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                              <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: `conic-gradient(from 225deg, #D8A03D 0deg ${k.d}, #2A2722 ${k.d} 270deg, transparent 270deg)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1C1A16', position: 'relative', transform: `rotate(${k.rot})` }}>
-                                  <div style={{ position: 'absolute', left: '10px', top: '2px', width: '2px', height: '8px', borderRadius: '1px', background: '#E9E4D8' }} />
-                                </div>
-                              </div>
-                              <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.08em', color: '#6E6A5E' }}>{k.label}</span>
-                              <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', lineHeight: '1', color: '#C7C0B0' }}>{k.val}</span>
-                            </div>
-                          </Fragment>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ height: '18px', flex: 'none', display: 'flex', alignItems: 'center', gap: '12px', padding: '0 10px' }}>
-                    <span style={{ flex: '1', fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#8D8779', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>osc 1 sine 0 c → F1 · osc 2 triangle +4 c → F1 · noise pink 0 %</span>
-                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', letterSpacing: '.1em', color: '#6E6A5E' }}>POLY 16 · ±2 ST · GAIN 74%</span>
-                  </div>
-                </div>
-                <div style={{ width: '700px', height: '260px', flex: 'none', display: 'flex', flexDirection: 'column', background: '#0B0A09', border: '1px solid #2C2923', borderRadius: '8px', overflow: 'hidden', boxSizing: 'border-box' }}>
-                  <div style={{ height: '22px', flex: 'none', display: 'flex', alignItems: 'center', gap: '10px', padding: '0 6px 0 10px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#E9E4D8' }}>Nota Flanger</span>
-                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', letterSpacing: '.14em', color: '#6E6A5E' }}>MODULATION</span>
-                    <span style={{ flex: '1' }} />
-                    <div style={{ width: '150px', height: '16px', display: 'flex', alignItems: 'stretch', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '4px', boxSizing: 'border-box' }}>
-                      <div style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8D8779', borderRight: '1px solid #221F1A', fontSize: '10px' }}>‹</div>
-                      <div style={{ flex: '1', display: 'flex', alignItems: 'center', padding: '0 8px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: '500', color: '#E9E4D8' }}>Init</span>
-                      </div>
-                      <div style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8D8779', borderLeft: '1px solid #221F1A', fontSize: '10px' }}>›</div>
-                    </div>
-                    <div style={{ width: '18px', height: '10px', borderRadius: '5px', position: 'relative', background: '#D8A03D' }}>
-                      <div style={{ position: 'absolute', top: '1.5px', left: '9.5px', width: '7px', height: '7px', borderRadius: '50%', background: '#141310' }} />
-                    </div>
-                  </div>
-                  <div style={{ flex: '1', minHeight: '0', display: 'flex', gap: '5px', padding: '0 6px' }}>
-                    <div style={{ width: '150px', flex: 'none', display: 'flex', flexDirection: 'column', gap: '7px', padding: '8px 10px', background: '#171613', borderRadius: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>LFO</span>
-                        <div style={{ display: 'flex', padding: '1px', gap: '1px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '3px' }}>
-                          <span style={{ padding: '2px 6px', borderRadius: '2px', background: '#D8A03D', fontSize: '9px', fontWeight: '600', color: '#171613' }}>Hz</span>
-                          <span style={{ padding: '2px 6px', fontSize: '9px', fontWeight: '600', color: '#6E6A5E' }}>Sync</span>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', padding: '1px', gap: '1px', background: '#100F0D', border: '1px solid #2C2923', borderRadius: '3px' }}>
-                        <span style={{ flex: '1', textAlign: 'center', padding: '3px 0', fontSize: '9px', fontWeight: '600', color: '#6E6A5E' }}>Sine</span>
-                        <span style={{ flex: '1', textAlign: 'center', padding: '3px 0', borderRadius: '2px', background: '#D8A03D', fontSize: '9px', fontWeight: '600', color: '#171613' }}>Tri</span>
-                        <span style={{ flex: '1', textAlign: 'center', padding: '3px 0', fontSize: '9px', fontWeight: '600', color: '#6E6A5E' }}>Saw</span>
-                      </div>
-                      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '3px' }}>
-                        <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '26px', fontWeight: '500', lineHeight: '1', color: '#F0C060' }}>0.08</span>
-                        <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#8D8779' }}>Hz · free · period 12.50 s</span>
-                      </div>
-                      {lfoSliders.map((s, sI) => (
-                        <Fragment key={sI}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>{s.label}</span>
-                              <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#C7C0B0' }}>{s.val}</span>
-                            </div>
-                            <div style={{ height: '4px', borderRadius: '2px', background: '#0E0D0B', position: 'relative' }}>
-                              <div style={{ position: 'absolute', left: '0', top: '0', bottom: '0', width: s.pct, borderRadius: '2px', background: '#D8A03D' }} />
-                            </div>
-                          </div>
-                        </Fragment>
-                      ))}
-                    </div>
-                    <div style={{ flex: '1', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '5px', padding: '8px 10px', background: '#171613', borderRadius: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>COMB RESPONSE</span>
-                        <span style={{ flex: '1' }} />
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#8D8779' }}>
-                          <span style={{ width: '8px', height: '2px', background: '#D8A03D' }} />L 4.04 ms
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#8D8779' }}>
-                          <span style={{ width: '8px', height: '2px', background: '#5AA0B8' }} />R 1.56 ms
-                        </span>
-                      </div>
-                      <div style={{ flex: '1', minHeight: '0', position: 'relative', background: '#100F0D', border: '1px solid #221F1A', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', inset: '0', backgroundImage: 'repeating-linear-gradient(90deg,#1A1814 0 1px,transparent 1px 33.333%),repeating-linear-gradient(0deg,#1A1814 0 1px,transparent 1px 25%)' }} />
-                        <svg width="100%" height="100%" viewBox={'0 0 300 120'} preserveAspectRatio={'none'} style={{ position: 'absolute', inset: '0', display: 'block' }}>
-                          <path d={combR} fill="none" stroke="#5AA0B8" strokeWidth="1" vectorEffect="non-scaling-stroke" opacity=".8" />
-                          <path d={combL} fill="none" stroke="#D8A03D" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
-                        </svg>
-                        <span style={{ position: 'absolute', left: '5px', top: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#55514A' }}>+6</span>
-                        <span style={{ position: 'absolute', left: '5px', bottom: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#55514A' }}>−24</span>
-                        <span style={{ position: 'absolute', left: '33.3%', bottom: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#55514A', paddingLeft: '3px' }}>200</span>
-                        <span style={{ position: 'absolute', left: '66.6%', bottom: '4px', fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#55514A', paddingLeft: '3px' }}>2k</span>
-                      </div>
-                      <div style={{ height: '30px', flex: 'none', position: 'relative', background: '#100F0D', border: '1px solid #221F1A', borderRadius: '4px', overflow: 'hidden' }}>
-                        <svg width="100%" height="100%" viewBox={'0 0 300 40'} preserveAspectRatio={'none'} style={{ position: 'absolute', inset: '0', display: 'block' }}>
-                          <path d={lfoR} fill="none" stroke="#5AA0B8" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-                          <path d={lfoL} fill="none" stroke="#D8A03D" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
-                        </svg>
-                        <div style={{ position: 'absolute', top: '0', bottom: '0', left: lfoHead, width: '1px', background: '#E9E4D8', opacity: '.6' }} />
-                      </div>
-                    </div>
-                    <div style={{ width: '156px', flex: 'none', display: 'flex', flexDirection: 'column', gap: '7px', padding: '8px 10px', background: '#171613', borderRadius: '6px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>DELAY LINE</span>
-                        <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '8px', color: '#6E6A5E' }}>positive</span>
-                      </div>
-                      {delaySliders.map((s, sI) => (
-                        <Fragment key={sI}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                              <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>{s.label}</span>
-                              <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#C7C0B0' }}>{s.val}</span>
-                            </div>
-                            <div style={{ height: '4px', borderRadius: '2px', background: '#0E0D0B', position: 'relative' }}>
-                              <div style={{ position: 'absolute', left: s.from, top: '0', bottom: '0', width: s.pct, borderRadius: '2px', background: '#D8A03D' }} />
-                            </div>
-                          </div>
-                        </Fragment>
-                      ))}
-                      <div style={{ flex: '1' }} />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', paddingTop: '8px', borderTop: '1px solid #221F1A' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>NOTCH</span>
-                          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#C7C0B0' }}>124 Hz</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '8px', fontWeight: '700', letterSpacing: '.1em', color: '#6E6A5E' }}>NULL</span>
-                          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', color: '#C7C0B0' }}>−19.7 dB</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ height: '18px', flex: 'none', display: 'flex', alignItems: 'center', gap: '12px', padding: '0 10px' }}>
-                    <span style={{ flex: '1', fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#8D8779', whiteSpace: 'nowrap' }}>notch sweeps 91 ↔ 969 Hz · τ 0.52–5.48 ms</span>
-                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '9px', letterSpacing: '.1em', color: '#6E6A5E' }}>44.1 kHz · 118 BPM · FREE RUN</span>
-                  </div>
-                </div>
-                <div style={{ flex: '1', minWidth: '0', display: 'flex' }}>
-                  <div style={{ flex: '1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', border: '1px dashed #2C2923', borderRadius: '6px' }}>
-                    <span style={{ fontSize: '18px', lineHeight: '1', color: '#6E6A5E' }}>+</span>
-                    <span style={{ fontSize: '11px', fontWeight: '500', color: '#8D8779' }}>Add device</span>
-                    <span style={{ fontSize: '10px', color: '#55514A', textAlign: 'center' }}>double-click in browser
-                      <br />or drop here
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : null}
+        {/* The Devices panel as the real app draws it (captured from Nota at 2x). */}
+        <img src={PANEL} alt="Devices panel: Nota Volt and Nota Flanger" width={1656} height={320} draggable={false}
+          style={{ display: 'block', width: '1656px', height: '320px', flex: 'none' }} />
         <div style={{ height: '12px', flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
           <span style={{ fontSize: '10px', color: '#6E6A5E' }}>Opened demo02.nota</span>
-          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#55514A' }}>44.1 kHz</span>
+          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: '#55514A' }}>44100 Hz</span>
         </div>
       </div>
     </div>

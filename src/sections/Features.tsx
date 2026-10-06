@@ -1,7 +1,7 @@
 import { Stems } from "../features/Stems";
 import { History } from "../features/History";
 import { AudioToMidi } from "../features/AudioToMidi";
-import { Devices } from "../features/Devices";
+import { DeviceGallery } from "../features/devices/DeviceGallery";
 import { Plugins } from "../features/Plugins";
 import { Mcp } from "../features/Mcp";
 import { Remote } from "../features/Remote";
@@ -15,12 +15,12 @@ export function Features() {
         <h2 style={{ margin: '0', fontSize: 'clamp(32px,4.4vw,52px)', fontWeight: '600', letterSpacing: '-.03em', lineHeight: '1.05', textWrap: 'balance' }}>Tools that usually cost extra, built in and running locally.</h2>
       </div>
       <Stems />
+      <Remote />
+      <DeviceGallery />
       <History />
       <AudioToMidi />
-      <Devices />
       <Plugins />
       <Mcp />
-      <Remote />
       <OpenSource />
     </section>
   );
