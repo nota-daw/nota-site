@@ -20,6 +20,7 @@ export function Nav({ theme, onTheme }: { theme: Theme; onTheme: (t: Theme) => v
           <a className="h1" href="#features" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Features</a>
           <a className="h2" href="#compare" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Compare</a>
           <a className="h3" href="#download" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Download</a>
+          <a className="h4" href="https://nota-daw.github.io/nota-docs/" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Docs</a>
           <a className="h4" href="https://github.com/nota-daw/nota" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>GitHub</a>
         </div>
         <div style={{ flex: '1' }} />
