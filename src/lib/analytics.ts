@@ -4,7 +4,7 @@
 //
 // Dashboard: https://<GOATCOUNTER_CODE>.goatcounter.com. Empty code = analytics off.
 
-const GOATCOUNTER_CODE = "";
+const GOATCOUNTER_CODE = "amberape";
 
 type GoatCounter = { count?: (v: { path: string; title?: string; event?: boolean }) => void };
 const gc = () => (window as Window & { goatcounter?: GoatCounter }).goatcounter;
