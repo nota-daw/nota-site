@@ -27,6 +27,7 @@ export function Nav({ theme, onTheme }: { theme: Theme; onTheme: (t: Theme) => v
           <a className="h3" href="#download" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Download</a>
           <a className="h4" href="https://nota-daw.github.io/nota-docs/" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Docs</a>
           <a className="h4" href="https://github.com/nota-daw/nota" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>GitHub</a>
+          <a className="h4" href="https://discord.gg/apf4Q2JKWk" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Discord</a>
         </div>
         <div style={{ flex: '1' }} />
         <div style={{ display: 'flex', padding: '3px', background: 'var(--well)', border: '1px solid var(--hair)', borderRadius: '3px' }}>

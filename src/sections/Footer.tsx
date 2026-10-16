@@ -11,6 +11,7 @@ export function Footer() {
         <a className="h12" href="https://github.com/nota-daw/nota" target="_blank" rel="noopener" style={{ fontSize: '13px', color: 'var(--ink3)' }}>GitHub</a>
         <a className="h13" href="https://github.com/nota-daw/nota/issues" target="_blank" rel="noopener" style={{ fontSize: '13px', color: 'var(--ink3)' }}>Issues</a>
         <a className="h14" href="https://github.com/nota-daw/nota/discussions" target="_blank" rel="noopener" style={{ fontSize: '13px', color: 'var(--ink3)' }}>Discussions</a>
+        <a className="h14" href="https://discord.gg/apf4Q2JKWk" target="_blank" rel="noopener" style={{ fontSize: '13px', color: 'var(--ink3)' }}>Discord</a>
       </div>
     </footer>
   );

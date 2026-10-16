@@ -57,6 +57,9 @@ export function Download({ release }: { release: Release }) {
           </Fragment>
         ))}
       </div>
+      <p style={{ margin: '0', fontSize: '14px', lineHeight: '1.6', color: 'var(--ink3)' }}>
+        Questions, a bug, an idea or a track made in Nota? <a href="https://discord.gg/apf4Q2JKWk" target="_blank" rel="noopener" style={{ fontWeight: '600', color: 'var(--ink)', borderBottom: '1px solid var(--accentEdge)', paddingBottom: '2px' }}>Join the Discord server →</a>
+      </p>
     </section>
   );
 }
