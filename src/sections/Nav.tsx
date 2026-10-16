@@ -1,4 +1,4 @@
-import { LOGO } from "../lib/brand";
+import { LOGO, LOGO_NIGHT } from "../lib/brand";
 import type { Theme } from "../lib/theme";
 
 const ICON = {
@@ -18,7 +18,7 @@ export function Nav({ theme, onTheme }: { theme: Theme; onTheme: (t: Theme) => v
     <nav style={{ position: 'sticky', top: '0', zIndex: '20', background: 'var(--navBg)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: '1px solid var(--line)' }}>
       <div className="nav-row" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 28px', height: '60px', display: 'flex', alignItems: 'center', gap: '28px', boxSizing: 'border-box' }}>
         <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--ink)' }}>
-          <img src={LOGO} alt="" width="26" height="26" style={{ display: 'block', borderRadius: '6px' }} />
+          <img src={theme === "dark" ? LOGO_NIGHT : LOGO} alt="" width="26" height="26" style={{ display: 'block', borderRadius: '6px' }} />
           <span style={{ fontSize: '16px', fontWeight: '600', letterSpacing: '-.01em' }}>Nota</span>
         </a>
         <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
