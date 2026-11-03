@@ -14,11 +14,25 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  # The scheduled run only dispatches; keep it out of the deploy group so the run it starts doesn't cancel it.
+  group: ${{ github.event_name == 'schedule' && 'pages-schedule' || 'pages' }}
   cancel-in-progress: true
 
 jobs:
+  # A schedule always runs on the default branch (develop), but the github-pages
+  # environment only accepts deployments from main — so re-run this workflow there.
+  dispatch:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
