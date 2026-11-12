@@ -22,10 +22,10 @@ export function History() {
   const selVersion = sel;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,400px),1fr))', gap: '48px', alignItems: 'center' }}>
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '3px', padding: '8px 0', boxSizing: 'border-box', minWidth: '0' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '9px', padding: '8px 0', overflow: 'hidden', boxSizing: 'border-box', minWidth: '0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 18px 12px', borderBottom: '1px solid var(--hair)' }}>
           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink)' }}>History</span>
-          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: 'var(--ink4)' }}>demo02.nota · 15 versions · 212 MB shared</span>
+          <span style={{ fontSize: '10px', color: 'var(--ink4)' }}>demo02.nota · 15 versions · 212 MB shared</span>
         </div>
         {versions.map((v, vI) => (
           <Fragment key={vI}>
@@ -40,17 +40,17 @@ export function History() {
                 <div style={{ position: 'absolute', left: v.dotX, top: '50%', width: '10px', height: '10px', marginTop: '-5px', borderRadius: '50%', background: v.dot, border: '2px solid var(--surface)' }} />
               </div>
               <div style={{ flex: '1', minWidth: '0', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid var(--hair)' }}>
-                <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '11px', color: v.tagInk, width: '34px', flex: 'none' }}>{v.v}</span>
+                <span style={{ fontSize: '11px', color: v.tagInk, width: '34px', flex: 'none' }}>{v.v}</span>
                 <span style={{ flex: '1', minWidth: '0', fontSize: '13px', color: 'var(--ink2)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.msg}</span>
-                <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: 'var(--ink4)', flex: 'none' }}>{v.time}</span>
+                <span style={{ fontSize: '10px', color: 'var(--ink4)', flex: 'none' }}>{v.time}</span>
               </div>
             </div>
           </Fragment>
         ))}
         <div style={{ display: 'flex', gap: '8px', padding: '14px 18px 8px' }}>
-          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '3px', background: 'var(--accent)', color: 'var(--onAccent)', fontSize: '12px', fontWeight: '600' }}>Go back to {selVersion}</span>
-          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '3px', border: '1px solid var(--line)', color: 'var(--ink2)', fontSize: '12px', fontWeight: '500', boxSizing: 'border-box' }}>Open as copy</span>
-          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '3px', border: '1px solid var(--line)', color: 'var(--ink2)', fontSize: '12px', fontWeight: '500', boxSizing: 'border-box' }}>New branch</span>
+          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '6px', background: 'var(--accent)', color: 'var(--onAccent)', fontSize: '12px', fontWeight: '600' }}>Go back to {selVersion}</span>
+          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '6px', background: 'var(--well)', color: 'var(--ink2)', fontSize: '12px', fontWeight: '500', boxSizing: 'border-box' }}>Open as copy</span>
+          <span style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '6px', background: 'var(--well)', color: 'var(--ink2)', fontSize: '12px', fontWeight: '500', boxSizing: 'border-box' }}>New branch</span>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '460px' }}>

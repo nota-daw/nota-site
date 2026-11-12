@@ -39,11 +39,11 @@ export function Hero({ release }: { release: Release }) {
         <h1 style={{ margin: '0', fontSize: 'clamp(40px,6.4vw,76px)', fontWeight: '600', letterSpacing: '-.035em', lineHeight: '1', color: 'var(--ink)', textWrap: 'balance' }}>The free DAW for macOS, Windows and Linux.</h1>
         <p style={{ margin: '0', fontSize: '18px', lineHeight: '1.6', color: 'var(--ink3)', maxWidth: '680px', textWrap: 'pretty' }}>Arrange, record, mix and master with {COUNTS.instruments} instruments, {COUNTS.audioEffects} audio effects and {COUNTS.midiEffects} MIDI effects built in. Stem separation and audio-to-MIDI run on your own computer, and every save is kept as a version you can return to.</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '6px' }}>
-          <a className="h6" href={primary.href} style={{ height: '48px', padding: '0 22px', display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '3px', background: 'var(--accent)', color: 'var(--onAccent)' }}>
+          <a className="h6" href={primary.href} style={{ height: '48px', padding: '0 22px', display: 'flex', alignItems: 'center', gap: '14px', borderRadius: '6px', background: 'var(--accent)', color: 'var(--onAccent)' }}>
             <span style={{ fontSize: '15px', fontWeight: '600' }}>{primary.label}</span>
-            <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '11px', opacity: '.75' }}>{primary.sub}</span>
+            <span style={{ fontSize: '11px', opacity: '.75' }}>{primary.sub}</span>
           </a>
-          <a className="h7" href="https://github.com/nota-daw/nota" target="_blank" rel="noopener" style={{ height: '48px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '3px', background: 'var(--raised)', border: '1px solid var(--line)', color: 'var(--ink2)', boxSizing: 'border-box' }}>
+          <a className="h7" href="https://github.com/nota-daw/nota" target="_blank" rel="noopener" style={{ height: '48px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '6px', background: 'var(--well)', color: 'var(--ink2)', boxSizing: 'border-box' }}>
             <span style={{ fontSize: '15px', fontWeight: '500' }}>Source on GitHub</span>
           </a>
         </div>
@@ -56,7 +56,7 @@ export function Hero({ release }: { release: Release }) {
           ))}
         </div>
       </div>
-      <div ref={heroRef} style={{ position: 'relative', width: '100%', height: heroH, borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--line)', boxShadow: '0 40px 100px #00000060', background: 'var(--line)' }}>
+      <div ref={heroRef} style={{ position: 'relative', width: '100%', height: heroH, borderRadius: '9px', overflow: 'hidden', border: '1px solid var(--line)', boxShadow: '0 40px 100px var(--shadow)', background: 'var(--line)' }}>
         <div ref={winRef} style={{ position: 'absolute', left: '0', top: '0', width: '1680px', transformOrigin: '0 0', transform: `scale(${heroScale})` }}>
           <MainWindow />
         </div>

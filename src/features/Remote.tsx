@@ -27,7 +27,7 @@ export function Remote() {
           {SCREENS.map((s) => {
             const on = s === screen;
             return (
-              <button key={s} onClick={() => setScreen(s)} aria-pressed={on} style={{ height: '26px', padding: '0 10px', display: 'flex', alignItems: 'center', borderRadius: '3px', background: on ? 'var(--accent)' : 'var(--well)', border: '1px solid ' + (on ? 'var(--accentEdge)' : 'var(--hair)'), fontSize: '12px', fontFamily: 'inherit', color: on ? 'var(--onAccent)' : 'var(--ink2)', boxSizing: 'border-box', cursor: 'pointer' }}>{s}</button>
+              <button key={s} className={'g-chip' + (on ? ' on' : '')} onClick={() => setScreen(s)} aria-pressed={on} style={{ height: '28px', padding: '0 12px', display: 'flex', alignItems: 'center', borderRadius: '7px', background: on ? 'var(--accentSoft)' : 'var(--well)', border: 'none', fontSize: '12px', fontWeight: on ? 600 : 400, color: on ? 'var(--accentInk)' : 'var(--ink2)', boxSizing: 'border-box', cursor: 'pointer' }}>{s}</button>
             );
           })}
         </div>
