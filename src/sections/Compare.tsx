@@ -35,7 +35,7 @@ export function Compare({ release }: { release: Release }) {
         <div style={{ fontSize: '12px', fontWeight: '500', color: 'var(--eyebrow)' }}>02 · Compare</div>
         <h2 style={{ margin: '0', fontSize: 'clamp(32px,4.4vw,52px)', fontWeight: '600', letterSpacing: '-.03em', lineHeight: '1.05', textWrap: 'balance' }}>How Nota lines up.</h2>
       </div>
-      <div style={{ overflowX: 'auto', border: '1px solid var(--line)', borderRadius: '3px', background: 'var(--surface)' }}>
+      <div style={{ overflowX: 'auto', border: '1px solid var(--line)', borderRadius: '9px', background: 'var(--surface)' }}>
         <div style={{ minWidth: '720px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px,1.6fr) repeat(4,minmax(110px,1fr))', borderBottom: '1px solid var(--line)' }}>
             {/* <span style={{ padding: '18px 20px' }} /> */}
@@ -43,7 +43,7 @@ export function Compare({ release }: { release: Release }) {
               <Fragment key={rI}>
                 <div style={{ padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: '3px', background: r.bg, borderLeft: '1px solid var(--hair)' }}>
                   <span style={{ fontSize: '14px', fontWeight: '600', color: r.ink }}>{r.name}</span>
-                  <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: 'var(--ink4)' }}>{r.sub}</span>
+                  <span style={{ fontSize: '10px', color: 'var(--ink4)' }}>{r.sub}</span>
                 </div>
               </Fragment>
             ))}

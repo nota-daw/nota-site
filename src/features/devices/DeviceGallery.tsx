@@ -16,18 +16,17 @@ const CATEGORIES = [
 
 // What each device is, as the app's browser describes it.
 const KIND: Record<string, string> = {
-  Synth: "subtractive synth", Volt: "analog synth", Aurora: "wavetable synth", Operator: "FM synth", Bass: "bass synth",
+  Synth: "subtractive synth", Volt: "analog synth", Twin: "morphing analog poly", Aurora: "wavetable synth", Operator: "FM synth", Bass: "bass synth",
   Flux: "vector-morph synth", Grain: "granular synth", Pentad: "poly synth", Consort: "paraphonic synth", Monolith: "mono synth",
   Physical: "physical-modelling synth", Keys: "electric piano", Pendulum: "arp synth", Sampler: "sampler", Mosaic: "multisample instrument", "Drum Rack": "drum pads", Rhythm: "drum machine",
   "EQ-3": "3-band EQ", "EQ-8": "8-band EQ", "Dynamic EQ": "dynamic EQ", Compressor: "compressor", Ceiling: "limiter", Level: "gain and loudness",
   Prism: "multiband dynamics", Reverb: "reverb", Chamber: "hybrid reverb", Delay: "delay", Chorus: "chorus", Phaser: "phaser", Flanger: "flanger",
   Orbit: "auto-pan", "Auto Filter": "envelope / LFO filter", "Auto Shift": "pitch correction", Forge: "saturator", Valve: "amplifier",
   Vintage: "vintage saturator", Crush: "bit crusher", "Beat Repeat": "glitch and repeats", Shutter: "gate", Strata: "looper",
-  Lens: "analyzer and scope", Utility: "utility", Arp: "arpeggiator", Chord: "chord generator", Scale: "scale quantizer",
+  Lens: "analyzer and scope", Vocoder: "vocoder", Utility: "utility", Arp: "arpeggiator", Chord: "chord generator", Scale: "scale quantizer",
   Length: "note length", Velocity: "velocity shaper", Random: "randomizer",
 };
 
-const mono = "'Geist Mono',monospace";
 
 export function DeviceGallery() {
   const [cat, setCat] = useState(CATEGORIES[0].title);
@@ -63,30 +62,30 @@ export function DeviceGallery() {
         <p style={{ margin: 0, fontSize: "16px", lineHeight: 1.65, color: "var(--ink3)", textWrap: "pretty", maxWidth: "520px" }}>Subtractive, FM, wavetable, granular, physical and vector synths, a sampler and two drum machines with 29 kits. Every effect shows what it does to the sound, and most ship with around 30 presets. Pick a device to see it.</p>
       </div>
 
-      <div className="gallery" style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "4px", padding: "16px", display: "grid", gridTemplateColumns: "minmax(0,1fr) 300px", gap: "16px", boxSizing: "border-box" }}>
+      <div className="gallery" style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "9px", padding: "16px", display: "grid", gridTemplateColumns: "minmax(0,1fr) 300px", gap: "16px", boxSizing: "border-box" }}>
         {/* Viewer */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", padding: "2px 4px 0" }}>
             <span style={{ width: "8px", height: "8px", borderRadius: "2px", background: color }} />
             <span style={{ fontSize: "18px", fontWeight: 600, color: "var(--ink)" }}>Nota {dev.name}</span>
-            <span style={{ fontFamily: mono, fontSize: "11px", color: "var(--ink4)" }}>{KIND[dev.name]}</span>
+            <span style={{ fontSize: "11px", color: "var(--ink4)" }}>{KIND[dev.name]}</span>
             <span style={{ flex: 1 }} />
             <div style={{ display: "flex", gap: "4px" }}>
               {[-1, 1].map((d) => (
                 <button key={d} className="g-arrow" onClick={() => step(d)} aria-label={d < 0 ? "Previous device" : "Next device"}
-                  style={{ width: "30px", height: "28px", borderRadius: "3px", border: "1px solid var(--line)", background: "var(--raised)", color: "var(--ink2)", cursor: "pointer", fontSize: "14px" }}>{d < 0 ? "‹" : "›"}</button>
+                  style={{ width: "28px", height: "28px", borderRadius: "7px", border: "none", background: "var(--well)", color: "var(--ink2)", cursor: "pointer", fontSize: "14px" }}>{d < 0 ? "‹" : "›"}</button>
               ))}
             </div>
           </div>
-          <div style={{ position: "relative", aspectRatio: "700 / 260", borderRadius: "3px", overflow: "hidden", background: "var(--line)", border: "1px solid var(--line)" }}>
+          <div style={{ position: "relative", aspectRatio: "700 / 260", borderRadius: "9px", overflow: "hidden", background: "var(--bg)" }}>
             <img key={v.src} src={shot("devices/" + v.src)} alt={`Nota ${dev.name} — ${v.label}`} width={1400} height={520} decoding="async"
               style={{ display: "block", width: "100%", height: "100%" }} />
           </div>
           {dev.views.length > 1 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", padding: "3px", alignSelf: "flex-start", background: "var(--well)", border: "1px solid var(--hair)", borderRadius: "3px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "2px", padding: "2px", alignSelf: "flex-start", background: "var(--well)", borderRadius: "7px" }}>
               {dev.views.map((x, i) => (
-                <button key={x.label} onClick={() => setView(i)}
-                  style={{ height: "26px", padding: "0 10px", border: "none", borderRadius: "4px", cursor: "pointer", fontFamily: "Geist, system-ui, sans-serif", fontSize: "12px", fontWeight: 600, background: i === view ? "var(--accent)" : "transparent", color: i === view ? "var(--onAccent)" : "var(--ink3)" }}>{x.label}</button>
+                <button key={x.label} className={"seg-cell" + (i === view ? " on" : "")} onClick={() => setView(i)} aria-pressed={i === view}
+                  style={{ height: "24px", padding: "0 10px", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "12px", fontWeight: i === view ? 600 : 400, background: i === view ? "var(--accentSoft)" : "transparent", color: i === view ? "var(--accentInk)" : "var(--ink3)" }}>{x.label}</button>
               ))}
             </div>
           )}
@@ -94,13 +93,13 @@ export function DeviceGallery() {
 
         {/* Picker */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: 0 }}>
-          <div style={{ display: "flex", padding: "3px", background: "var(--well)", border: "1px solid var(--hair)", borderRadius: "3px" }}>
+          <div style={{ display: "flex", gap: "2px", padding: "2px", background: "var(--well)", borderRadius: "7px" }}>
             {CATEGORIES.map((c) => {
               const on = c.title === cat;
               return (
-                <button key={c.title} onClick={() => pickCat(c.title)}
-                  style={{ flex: 1, height: "28px", border: "none", borderRadius: "4px", cursor: "pointer", fontFamily: "Geist, system-ui, sans-serif", fontSize: "11px", fontWeight: 600, whiteSpace: "nowrap", background: on ? "var(--accent)" : "transparent", color: on ? "var(--onAccent)" : "var(--ink3)" }}>
-                  {c.title.replace(" effects", " FX")} <span style={{ fontFamily: mono, fontWeight: 400, opacity: 0.7 }}>{ALL.filter((d) => d.category === c.title).length}</span>
+                <button key={c.title} className={"seg-cell" + (on ? " on" : "")} onClick={() => pickCat(c.title)} aria-pressed={on}
+                  style={{ flex: 1, height: "26px", border: "none", borderRadius: "5px", cursor: "pointer", fontSize: "11px", fontWeight: 600, whiteSpace: "nowrap", background: on ? "var(--accentSoft)" : "transparent", color: on ? "var(--accentInk)" : "var(--ink3)" }}>
+                  {c.title.replace(" effects", " FX")} <span style={{ fontWeight: 400, opacity: 0.7 }}>{ALL.filter((d) => d.category === c.title).length}</span>
                 </button>
               );
             })}
@@ -109,8 +108,8 @@ export function DeviceGallery() {
             {inCat.map((d) => {
               const on = d.name === dev.name;
               return (
-                <button key={d.name} className="g-chip" onClick={() => pick(d.name)}
-                  style={{ height: "28px", padding: "0 10px", display: "flex", alignItems: "center", gap: "6px", borderRadius: "4px", cursor: "pointer", boxSizing: "border-box", fontFamily: "Geist, system-ui, sans-serif", fontSize: "12px", background: on ? "var(--accentSoft)" : "var(--well)", border: `1px solid ${on ? "var(--accentEdge)" : "var(--hair)"}`, color: on ? "var(--ink)" : "var(--ink2)" }}>
+                <button key={d.name} className={"g-chip" + (on ? " on" : "")} onClick={() => pick(d.name)} aria-pressed={on}
+                  style={{ height: "28px", padding: "0 10px", display: "flex", alignItems: "center", gap: "6px", borderRadius: "7px", cursor: "pointer", boxSizing: "border-box", fontSize: "12px", fontWeight: on ? 600 : 400, background: on ? "var(--accentSoft)" : "var(--well)", border: "none", color: on ? "var(--accentInk)" : "var(--ink2)" }}>
                   <span style={{ width: "6px", height: "6px", borderRadius: "2px", background: CATEGORIES.find((c) => c.title === d.category)!.color }} />{d.name}
                 </button>
               );

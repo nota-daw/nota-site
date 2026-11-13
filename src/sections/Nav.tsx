@@ -30,14 +30,14 @@ export function Nav({ theme, onTheme }: { theme: Theme; onTheme: (t: Theme) => v
           <a className="h4" href="https://discord.gg/apf4Q2JKWk" target="_blank" rel="noopener" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--ink3)' }}>Discord</a>
         </div>
         <div style={{ flex: '1' }} />
-        <div style={{ display: 'flex', padding: '3px', background: 'var(--well)', border: '1px solid var(--hair)', borderRadius: '3px' }}>
+        <div style={{ display: 'flex', padding: '2px', background: 'var(--well)', borderRadius: '7px' }}>
           {themes.map((t) => (
-            <button key={t.key} onClick={t.onClick} aria-label={t.label} aria-pressed={t.on} title={t.label} style={{ width: '28px', height: '24px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', borderRadius: '2px', background: t.on ? 'var(--accent)' : 'transparent', color: t.on ? 'var(--onAccent)' : 'var(--ink3)', cursor: 'pointer' }}>
+            <button key={t.key} className={'seg-cell' + (t.on ? ' on' : '')} onClick={t.onClick} aria-label={t.label} aria-pressed={t.on} title={t.label} style={{ width: '28px', height: '26px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', borderRadius: '5px', background: t.on ? 'var(--accentSoft)' : 'transparent', color: t.on ? 'var(--accentInk)' : 'var(--ink3)', cursor: 'pointer' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={t.icon} /></svg>
             </button>
           ))}
         </div>
-        <a className="h5" href="#download" style={{ height: '34px', padding: '0 16px', display: 'flex', alignItems: 'center', borderRadius: '3px', background: 'var(--accent)', color: 'var(--onAccent)', fontSize: '13px', fontWeight: '600' }}>Download</a>
+        <a className="h5" href="#download" style={{ height: '34px', padding: '0 16px', display: 'flex', alignItems: 'center', borderRadius: '6px', background: 'var(--accent)', color: 'var(--onAccent)', fontSize: '13px', fontWeight: '600' }}>Download</a>
       </div>
     </nav>
   );

@@ -15,8 +15,8 @@ export function Download({ release }: { release: Release }) {
     return {
       os: META[main].os, arch: META[main].arch, file: d.file, size: d.size, href: d.href, yours,
       hasAlt: !!ad, altHref: ad ? ad.href : "", altLabel: ad && altKey ? META[altKey].arch.split(" ·")[0] + " build " + ad.size : "",
-      bg: yours ? "var(--accentSoft)" : "var(--surface)", edge: yours ? "var(--accentEdge)" : "var(--line)",
-      btnBg: yours ? "var(--accent)" : "transparent", btnInk: yours ? "var(--onAccent)" : "var(--ink2)", btnEdge: yours ? "var(--accent)" : "var(--line)",
+      bg: yours ? "var(--accentSoft)" : "var(--surface)", edge: yours ? "var(--accentEdge)" : "transparent",
+      btnBg: yours ? "var(--accent)" : "var(--well)", btnInk: yours ? "var(--onAccent)" : "var(--ink2)",
     };
   });
   return (
@@ -33,20 +33,20 @@ export function Download({ release }: { release: Release }) {
         {downloads.map((d, dI) => (
           <Fragment key={dI}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <a className="h10" href={d.href} style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '22px', padding: '22px', borderRadius: '3px', background: d.bg, border: `1px solid ${d.edge}`, color: 'var(--ink)', boxSizing: 'border-box' }}>
+              <a className={"h10" + (d.yours ? " yours" : "")} href={d.href} style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '22px', padding: '22px', borderRadius: '9px', background: d.bg, border: `1px solid ${d.edge}`, color: 'var(--ink)', boxSizing: 'border-box' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '18px', fontWeight: '600' }}>{d.os}</span>
                   {d.yours ? (
                     <>
-                      <span style={{ fontSize: '11px', fontWeight: '600', padding: '2px 7px', borderRadius: '3px', background: 'var(--accent)', color: 'var(--onAccent)' }}>Your system</span>
+                      <span style={{ fontSize: '11px', fontWeight: '600', padding: '2px 7px', borderRadius: '6px', background: 'var(--accent)', color: 'var(--onAccent)' }}>Your system</span>
                     </>
                   ) : null}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <span style={{ fontSize: '13px', color: 'var(--ink3)' }}>{d.arch}</span>
-                  <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '11px', color: 'var(--ink4)', overflowWrap: 'anywhere' }}>{d.file}</span>
+                  <span style={{ fontSize: '11px', color: 'var(--ink4)', overflowWrap: 'anywhere' }}>{d.file}</span>
                 </div>
-                <span style={{ height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', borderRadius: '3px', fontSize: '13px', fontWeight: '600', background: d.btnBg, color: d.btnInk, border: `1px solid ${d.btnEdge}`, boxSizing: 'border-box' }}>Download {d.size}</span>
+                <span style={{ height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', borderRadius: '6px', fontSize: '13px', fontWeight: '600', background: d.btnBg, color: d.btnInk, boxSizing: 'border-box' }}>Download {d.size}</span>
               </a>
               {d.hasAlt ? (
                 <>

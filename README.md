@@ -25,7 +25,7 @@ npm run build    # type-check and build to dist/
 - `scripts/github-snapshot.mjs` → `src/data/github.json` — the latest nota-daw/nota release (version, date, assets) and the contributors across the nota-daw repos, snapshotted at build time; on a failed fetch it keeps the committed file
 - `src/lib/release.ts` — starts from the snapshot, then fetches the latest GitHub release and picks the download for the visitor's OS; falls back to the releases page offline
 - `src/features/Contributors.tsx` — the contributors section, from the snapshot
-- `src/styles.css` — Studio Dark / Studio Light tokens (from the app's `Theme/Themes/studio-*.json`) and hover states
+- `src/styles.css` — Studio Dark / Studio Light tokens (from the app's `Theme/Themes/studio-*.json`, the style guide of nota spec 038) and hover states. The site follows the app's look: one typeface (Geist with tabular figures), controls on a faint well with no border, the soft orange tint for what is picked and solid orange only for the main call to action, corners 9 / 7 / 6 / 5
 
 ## Deploy
 
