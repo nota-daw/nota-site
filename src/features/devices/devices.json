@@ -48,6 +48,28 @@
   ]
  },
  {
+  "name": "Twin",
+  "category": "Instruments",
+  "views": [
+   {
+    "label": "Osc",
+    "src": "twin-0.avif"
+   },
+   {
+    "label": "Filter",
+    "src": "twin-1.avif"
+   },
+   {
+    "label": "Matrix",
+    "src": "twin-2.avif"
+   },
+   {
+    "label": "Seq",
+    "src": "twin-3.avif"
+   }
+  ]
+ },
+ {
   "name": "Aurora",
   "category": "Instruments",
   "views": [
@@ -162,7 +184,7 @@
     "src": "pentad-0.avif"
    },
    {
-    "label": "Filter \u00b7 Amp",
+    "label": "Filter",
     "src": "pentad-1.avif"
    },
    {
@@ -180,7 +202,7 @@
     "src": "consort-0.avif"
    },
    {
-    "label": "Filters \u00b7 Env",
+    "label": "Filters",
     "src": "consort-1.avif"
    },
    {
@@ -758,6 +780,24 @@
    {
     "label": "Waterfall",
     "src": "lens-2.avif"
+   }
+  ]
+ },
+ {
+  "name": "Vocoder",
+  "category": "Audio effects",
+  "views": [
+   {
+    "label": "Init",
+    "src": "vocoder-0.avif"
+   },
+   {
+    "label": "Robot choir",
+    "src": "vocoder-1.avif"
+   },
+   {
+    "label": "Talk box",
+    "src": "vocoder-2.avif"
    }
   ]
  },

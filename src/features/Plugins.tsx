@@ -17,7 +17,7 @@ export function Plugins() {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <ScaleToFit width={880} height={640}>
-          <img src={shot("settings/downloads.avif")} width={880} height={640} loading="lazy" decoding="async" alt="Settings, Downloads page: the plug-in registry with Install buttons" style={{ display: 'block', borderRadius: '4px', border: '1px solid var(--line)', boxShadow: '0 30px 80px #00000050', boxSizing: 'border-box' }} />
+          <img src={shot("settings/downloads.avif")} width={880} height={640} loading="lazy" decoding="async" alt="Settings, Downloads page: the plug-in registry with Install buttons" style={{ display: 'block', borderRadius: '9px', border: '1px solid var(--line)', boxShadow: '0 30px 80px var(--shadow)', boxSizing: 'border-box' }} />
         </ScaleToFit>
       </div>
     </div>

@@ -9,8 +9,7 @@ const mcp = [
 ].map((m) => ({
   ...m, r: m.r || null,
   whoInk: m.who === "You" ? "var(--ink3)" : m.who === "AI" ? "var(--accentInk)" : "var(--ink4)",
-  font: m.who === "Tool" ? "'Geist Mono',monospace" : "Geist, system-ui, sans-serif",
-  size: m.who === "Tool" ? "12px" : "14px",
+    size: m.who === "Tool" ? "12px" : "14px",
   ink: m.who === "Tool" ? "var(--ink2)" : "var(--ink)",
 }));
 
@@ -22,16 +21,16 @@ export function Mcp() {
         <h3 style={{ margin: '0', fontSize: '32px', fontWeight: '600', letterSpacing: '-.02em', lineHeight: '1.1' }}>Let an assistant do the busywork.</h3>
         <p style={{ margin: '0', fontSize: '16px', lineHeight: '1.65', color: 'var(--ink3)', textWrap: 'pretty' }}>Nota speaks MCP, so an AI assistant can read and control nearly every device, search your samples by tempo and key, find similar sounds, separate stems, turn audio into MIDI and save a project version before it tries anything.</p>
       </div>
-      <div style={{ background: 'var(--well)', border: '1px solid var(--line)', borderRadius: '3px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', boxSizing: 'border-box', minWidth: '0' }}>
+      <div style={{ background: 'var(--sunken)', border: '1px solid var(--line)', borderRadius: '9px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', boxSizing: 'border-box', minWidth: '0' }}>
         {mcp.map((m, mI) => (
           <Fragment key={mI}>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
               <span style={{ width: '44px', flex: 'none', fontSize: '11px', fontWeight: '500', paddingTop: '2px', color: m.whoInk }}>{m.who}</span>
               <div style={{ flex: '1', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontFamily: m.font, fontSize: m.size, lineHeight: '1.55', color: m.ink, overflowWrap: 'anywhere' }}>{m.t}</span>
+                <span style={{ fontSize: m.size, lineHeight: '1.55', color: m.ink, overflowWrap: 'anywhere' }}>{m.t}</span>
                 {m.r ? (
                   <>
-                    <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '11px', color: 'var(--ink4)' }}>→ {m.r}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--ink4)' }}>→ {m.r}</span>
                   </>
                 ) : null}
               </div>

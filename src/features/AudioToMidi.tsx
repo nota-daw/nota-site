@@ -34,19 +34,19 @@ export function AudioToMidi() {
         <h3 style={{ margin: '0', fontSize: '32px', fontWeight: '600', letterSpacing: '-.02em', lineHeight: '1.1' }}>Hum it, play it, get the notes.</h3>
         <p style={{ margin: '0', fontSize: '16px', lineHeight: '1.65', color: 'var(--ink3)', textWrap: 'pretty' }}>Convert Melody and Convert Harmony use Spotify's basic-pitch model. They pick up every note, chords included, with velocities that follow the playing. Nota also reads tempo and key from your sample library, so you can filter loops by BPM and key.</p>
       </div>
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '3px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', minWidth: '0' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '9px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px', boxSizing: 'border-box', minWidth: '0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 4px' }}>
           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--ink)' }}>Keys take 2</span>
-          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: 'var(--ink4)' }}>Convert Harmony</span>
+          <span style={{ fontSize: '10px', color: 'var(--ink4)' }}>Convert Harmony</span>
           <span style={{ flex: '1' }} />
-          <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '10px', color: 'var(--accentInk)' }}>A minor · 124 BPM</span>
+          <span style={{ fontSize: '10px', color: 'var(--accentInk)' }}>A minor · 124 BPM</span>
         </div>
-        <div style={{ height: '56px', borderRadius: '3px', background: 'var(--well)', border: '1px solid var(--hair)', overflow: 'hidden' }}>
+        <div style={{ height: '56px', borderRadius: '5px', background: 'var(--well)', overflow: 'hidden' }}>
           <svg viewBox={'0 0 600 60'} preserveAspectRatio={'none'} style={{ width: '100%', height: '100%', display: 'block' }}>
             <path d={keysD} stroke="#6A9FD8" strokeWidth="1.6" fill="none" />
           </svg>
         </div>
-        <div style={{ height: '220px', display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid var(--hair)' }}>
+        <div style={{ height: '220px', display: 'flex', borderRadius: '5px', overflow: 'hidden', border: '1px solid var(--line)' }}>
           <div style={{ width: '30px', flex: 'none', display: 'flex', flexDirection: 'column', background: 'var(--raised)', borderRight: '1px solid var(--hair)' }}>
             {keysRows.map((k, kI) => (
               <Fragment key={kI}>
@@ -54,7 +54,7 @@ export function AudioToMidi() {
               </Fragment>
             ))}
           </div>
-          <div style={{ flex: '1', minWidth: '0', position: 'relative', background: 'var(--well)', backgroundImage: 'repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 12.5%)' }}>
+          <div style={{ flex: '1', minWidth: '0', position: 'relative', background: 'var(--sunken)', backgroundImage: 'repeating-linear-gradient(90deg,var(--grid) 0 1px,transparent 1px 12.5%)' }}>
             {notes.map((n, nI) => (
               <Fragment key={nI}>
                 <div style={{ position: 'absolute', left: n.left, top: n.top, width: n.width, height: n.h, borderRadius: '2px', background: '#FF9F1C', opacity: n.op, boxShadow: 'inset 0 0 0 1px #00000030' }} />

@@ -23,15 +23,15 @@ export function Contributors() {
           const body = (
             <>
               {p.avatar
-                ? <img src={p.avatar + (p.avatar.includes("?") ? "&" : "?") + "s=80"} alt="" width={36} height={36} loading="lazy" decoding="async" style={{ display: 'block', borderRadius: '3px', background: 'var(--well)' }} />
-                : <span aria-hidden="true" style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '3px', background: 'var(--well)', color: 'var(--ink3)', fontSize: '13px', fontWeight: '600' }}>{initials(p.name)}</span>}
+                ? <img src={p.avatar + (p.avatar.includes("?") ? "&" : "?") + "s=80"} alt="" width={36} height={36} loading="lazy" decoding="async" style={{ display: 'block', borderRadius: '5px', background: 'var(--well)' }} />
+                : <span aria-hidden="true" style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '5px', background: 'var(--well)', color: 'var(--ink3)', fontSize: '13px', fontWeight: '600' }}>{initials(p.name)}</span>}
               <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: '0' }}>
                 <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
-                <span style={{ fontFamily: "'Geist Mono',monospace", fontSize: '11px', color: 'var(--ink4)' }}>{p.contributions} {p.contributions === 1 ? "commit" : "commits"}</span>
+                <span style={{ fontSize: '11px', color: 'var(--ink4)' }}>{p.contributions} {p.contributions === 1 ? "commit" : "commits"}</span>
               </span>
             </>
           );
-          const box = { display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '3px', color: 'inherit' } as const;
+          const box = { display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '7px', color: 'inherit' } as const;
           return (
             <li key={p.login ?? p.name}>
               {p.url ? <a className="h9" href={p.url} target="_blank" rel="noopener" style={box}>{body}</a> : <div style={box}>{body}</div>}

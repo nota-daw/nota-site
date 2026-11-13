@@ -1,16 +1,21 @@
-/* Studio theme tokens: Studio Dark and Studio Light, from the app's Theme/Themes/studio-*.json.
-   ground = BgApp, surface = Panel, well = BgSunken, raised = SurfaceRaised, line = Seam (between
-   panels, around controls), hair = Rule (within a panel), ink…ink4 = TextHeading, TextStrong,
-   TextSecondary, TextMuted; accent = Accent, accentHi = AccentHover, accentSoft = selected row,
-   accentEdge = BorderBrass. accentInk is the accent as text: AccentBright in dark, AccentPale in
-   light (Studio Light's AccentBright is below 4.5:1 for body text on the ground). */
-:root, html[data-theme="dark"] { --bg:#1E1F22; --surface:#2B2D31; --well:#17181A; --raised:#34363B; --line:#141517; --hair:#45484E; --ink:#F4F5F6; --ink2:#D4D6DA; --ink3:#C0C4C9; --ink4:#A4A9B0; --accent:#FF9F1C; --accentHi:#FFB547; --accentInk:#FFB547; --accentSoft:#393C41; --accentEdge:#BF7D22; --eyebrow:#A4A9B0; --onAccent:#17181A; --grid:#2A2C30; --navBg:#1E1F22E6; color-scheme: dark; }
-html[data-theme="light"] { --bg:#C9CBCF; --surface:#E4E5E7; --well:#D6D8DB; --raised:#EEEFF1; --line:#9DA0A6; --hair:#B3B6BB; --ink:#0E0F11; --ink2:#282A2E; --ink3:#3A3D42; --ink4:#4F535A; --accent:#EF8A0C; --accentHi:#F3A646; --accentInk:#8A4A00; --accentSoft:#F7F8F9; --accentEdge:#ECA54E; --eyebrow:#4F535A; --onAccent:#17181A; --grid:#BDC0C4; --navBg:#C9CBCFE6; color-scheme: light; }
+/* Studio theme tokens: Studio Dark and Studio Light, from the app's Theme/Themes/studio-*.json
+   (the style guide, nota spec 038). ground = BgApp, surface = Panel, card = SurfaceCard,
+   raised = SurfaceRaised, hover = SurfaceHover, sunken = BgSunken, well = Well (the faint
+   see-through fill behind a button, field or chip at rest — it replaces a border),
+   wellTrack = WellTrack, line = Seam (between panels), hair = Rule (within a panel),
+   ink…ink4 = TextHeading, TextStrong, TextSecondary, TextMuted.
+   Orange has three jobs: accent (solid) for what is live and the one call to action;
+   accentSoft (the soft tint) with accentInk text for what is picked; accentEdge = BorderBrass
+   for orange lines. accentInk = AccentBright in dark, AccentPale in light.
+   Corners follow the app's scale: card 9, group 7, field 6, cell 5, small 3. */
+:root, html[data-theme="dark"] { --bg:#1E1F22; --surface:#26282C; --card:#2B2D31; --raised:#303237; --hover:#393C41; --sunken:#17181A; --well:#FFFFFF0E; --wellTrack:#FFFFFF17; --line:#141517; --hair:#45484E; --ink:#F4F5F6; --ink2:#D4D6DA; --ink3:#C0C4C9; --ink4:#A4A9B0; --accent:#FF9F1C; --accentHi:#FFB547; --accentInk:#FFB547; --accentSoft:#4A3B28; --accentEdge:#BF7D22; --eyebrow:#A4A9B0; --onAccent:#17181A; --grid:#2A2C30; --navBg:#1E1F22E6; --shadow:#00000060; color-scheme: dark; }
+html[data-theme="light"] { --bg:#C9CBCF; --surface:#E4E5E7; --card:#E4E5E7; --raised:#EEEFF1; --hover:#F7F8F9; --sunken:#D6D8DB; --well:#0000000F; --wellTrack:#0000001C; --line:#9DA0A6; --hair:#B3B6BB; --ink:#0E0F11; --ink2:#282A2E; --ink3:#3A3D42; --ink4:#4F535A; --accent:#EF8A0C; --accentHi:#F3A646; --accentInk:#8A4A00; --accentSoft:#FBE3C4; --accentEdge:#ECA54E; --eyebrow:#4F535A; --onAccent:#17181A; --grid:#BDC0C4; --navBg:#C9CBCFE6; --shadow:#00000030; color-scheme: light; }
 html { scroll-behavior:smooth; }
-body { margin:0; background:var(--bg); color:var(--ink); font-family:Geist, system-ui, sans-serif; -webkit-font-smoothing:antialiased; transition:background .2s; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:Geist, system-ui, sans-serif; font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased; transition:background .2s; }
 a { color:var(--accentInk); text-decoration:none; }
 a:hover { color:var(--accentHi); }
 ::selection { background:#FF9F1C55; }
+button { font-family:inherit; font-variant-numeric:inherit; }
 section[id], header[id] { scroll-margin-top:60px; }
 
 /* Hover states (inline styles win over plain class rules, hence !important). */
@@ -20,16 +25,15 @@ section[id], header[id] { scroll-margin-top:60px; }
 .h4:hover{color:var(--ink) !important}
 .h5:hover{background:var(--accentHi) !important;color:var(--onAccent) !important}
 .h6:hover{background:var(--accentHi) !important;color:var(--onAccent) !important}
-.h7:hover{color:var(--ink) !important;border-color:var(--ink4) !important}
+.h7:hover{color:var(--ink) !important;background:var(--hover) !important}
 .h8:hover{color:var(--ink) !important}
-.h9:hover{background:var(--raised) !important}
-.h10:hover{border-color:var(--accent) !important;color:var(--ink) !important}
+.h9:hover{background:var(--well) !important}
+.h10:hover{background:var(--hover) !important;color:var(--ink) !important}
+.h10.yours:hover{background:var(--accentSoft) !important;box-shadow:inset 0 0 0 1px var(--accentEdge)}
 .h11:hover{color:var(--ink) !important}
 .h12:hover{color:var(--ink) !important}
 .h13:hover{color:var(--ink) !important}
 .h14:hover{color:var(--ink) !important}
-.mwh1:hover{background:#393C41 !important}
-.mwh2:hover{background:#393C41 !important;border-color:#45484E !important}
 
 /* Narrow screens: the section links collapse; logo, theme and Download stay. */
 @media (max-width: 760px) {
@@ -38,20 +42,8 @@ section[id], header[id] { scroll-margin-top:60px; }
 }
 
 /* Device gallery */
-.g-chip:hover, .g-arrow:hover { border-color: var(--ink4) !important; color: var(--ink) !important; }
+.g-chip:hover, .g-arrow:hover, .seg-cell:hover { background: var(--hover) !important; color: var(--ink) !important; }
+.g-chip.on:hover, .seg-cell.on:hover { background: var(--accentSoft) !important; color: var(--accentInk) !important; }
 @media (max-width: 900px) {
   .gallery { grid-template-columns: minmax(0, 1fr) !important; }
 }
-.ph1:hover{background:#393C41 !important}
-.ph2:hover{background:#393C41 !important}
-.ph3:hover{background:#393C41 !important}
-.st1:hover{background:#393C41 !important}
-.st2:hover{border-color:#45484E !important}
-.st3:hover{background:#3A3C41 !important}
-.st4:hover{background:#393C41 !important}
-.st5:hover{background:#393C41 !important}
-.st6:hover{background:#393C41 !important}
-.st7:hover{background:#393C41 !important;color:#E8E9EB !important}
-.st8:hover{color:#E8E9EB !important}
-.st9:hover{background:#393C41 !important}
-.st10:hover{background:#393C41 !important}
